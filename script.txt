@@ -1,0 +1,47 @@
+CREATE DATABASE TorneoCalcioDB;
+GO
+USE TorneoCalcioDB;
+GO
+
+CREATE TABLE Squadre (
+    IdSquadra      INT IDENTITY(1,1) PRIMARY KEY,
+    Nome           NVARCHAR(100) NOT NULL UNIQUE,
+    Citta          NVARCHAR(100),
+    AnnoFondazione INT
+);
+
+CREATE TABLE Giocatori (
+    IdGiocatore   INT IDENTITY(1,1) PRIMARY KEY,
+    Nome          NVARCHAR(50) NOT NULL,
+    Cognome       NVARCHAR(50) NOT NULL,
+    Ruolo         NVARCHAR(50),
+    NumeroMaglia  INT,
+    IdSquadra     INT NOT NULL,
+    FOREIGN KEY (IdSquadra) REFERENCES Squadre(IdSquadra) ON DELETE CASCADE
+);
+
+CREATE TABLE Partite (
+    IdPartita       INT IDENTITY(1,1) PRIMARY KEY,
+    IdSquadraCasa   INT NOT NULL,
+    IdSquadraOspite INT NOT NULL,
+    DataPartita     DATE NOT NULL,
+    GolCasa         INT NULL,
+    GolOspite       INT NULL,
+    Giocata         BIT NOT NULL DEFAULT 0,
+    FOREIGN KEY (IdSquadraCasa)   REFERENCES Squadre(IdSquadra),
+    FOREIGN KEY (IdSquadraOspite) REFERENCES Squadre(IdSquadra)
+);
+
+INSERT INTO Squadre (Nome, Citta, AnnoFondazione) VALUES
+ ('Torino FC','Torino',1906),('Juventus','Torino',1897),
+ ('Milan','Milano',1899),('Inter','Milano',1908);
+
+
+INSERT INTO Giocatori (Nome, Cognome, Ruolo, NumeroMaglia, IdSquadra) VALUES
+ ('Marco','Rossi','Attaccante',9,1),
+ ('Luca','Bianchi','Portiere',1,1),
+ ('Paolo','Verdi','Difensore',4,2);
+
+INSERT INTO Partite (IdSquadraCasa, IdSquadraOspite, DataPartita, GolCasa, GolOspite, Giocata) VALUES
+ (1,2,'2025-09-01',2,1,1),
+ (3,4,'2025-09-01',0,0,1);
